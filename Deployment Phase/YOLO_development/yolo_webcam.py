@@ -17,8 +17,8 @@ model = YOLO('../../YOLO_weights/yolo11n.pt')
 
 cap = cv2.VideoCapture(0)
 
-cap.set(3, 1280) #width
-cap.set(4, 720) #height
+cap.set(3, 180) #width
+cap.set(4, 180) #height
 
 while True:
     success, img = cap.read()
@@ -30,6 +30,7 @@ while True:
             x1, y1, x2, y2 = j.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2- x1, y2-y1
+            print(x1, y1, x2, y2)
 
             cvzone.cornerRect(img, (x1, y1, w, h))
 
