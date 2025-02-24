@@ -14,7 +14,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
               "teddy bear", "hair drier", "toothbrush"
               ]
-ori_width, ori_height = 640, 480
+ori_width, ori_height = 1280, 720
 target_width, target_height = 180, 180
 esp = serial.Serial("COM24", 9600, )
 time.sleep(2)
@@ -40,8 +40,6 @@ default_position_sent = False
 while True:
     success, img = cap.read()
     results = model(img, stream=True)
-    shortest_obj_id = None
-    min_height = float('inf')
     dets = np.empty((0, 5))
     object_detected = False
 
@@ -62,6 +60,9 @@ while True:
                 cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2+40)))
 
     result_tracker = tracker.update(dets)
+    shortest_obj_id = None
+    min_dist = float('inf')
+    closest_coords = None
 
     for i in result_tracker:
         x1, y1, x2, y2, id = i
@@ -69,21 +70,26 @@ while True:
         w, h = x2 - x1, y2 - y1
         cx, cy = x1 + w // 2, y1 + h // 2
 
-        if h < min_height:  # Find the shortest object
-            min_height = h
-            shortest_obj_id = id
+        dist = ori_height - cy
 
+        if dist < min_dist:
+            min_dist = dist
+            shortest_obj_id = id
+            closest_coords = (cx, cy)
+
+        cvzone.cornerRect(img, (x1, y1, w, h))
+        cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)))
+        cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+        cv2.line(img, (cx, cy), (cx, ori_height), (0, 255, 0), 2)
+
+    if shortest_obj_id is not None and closest_coords is not None:
+        cx, cy = closest_coords
         new_x, new_y = map_coordinates(cx, cy)
         data = f"{new_x},{new_y}\n"
         esp.write(data.encode())
         print(f"center: {cx} -- altered: {new_x}")
         print(f"center: {cy} -- altered: {new_y}")
+        cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{dist}", (max(0, 0), max(30, 0)))
 
-        cvzone.cornerRect(img, (x1, y1, w, h))
-        cvzone.putTextRect(img, f"id:{id}", (max(0, x1), max(30, y1 - 10)))
-        cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
-
-    if shortest_obj_id is not None:
-        cvzone.putTextRect(img, f"shortest_distance: {shortest_obj_id}", (10, 50))
     cv2.imshow("webcam", img)
     cv2.waitKey(1)

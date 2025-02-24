@@ -1,0 +1,5 @@
+The servo_alignment.py is python script that draws a crosshair in the webcam video. Which is usually the centre of the video.
+
+So first we need to mound the servo's pan-tilt mechanism to (90, 90) degree for 180 degree servo. It fixs the servos at centre. Use a lazer or any lighting mechanism to point the centre of the crosshair.
+
+On paper this exactly detects the centre of objects which we intented to detect.
