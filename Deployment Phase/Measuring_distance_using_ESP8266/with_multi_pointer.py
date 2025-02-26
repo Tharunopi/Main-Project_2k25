@@ -157,7 +157,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == 27:  # Press Esc to exit
         break
 
-# Clean up
 if esp:
     esp.close()
 cap.release()
