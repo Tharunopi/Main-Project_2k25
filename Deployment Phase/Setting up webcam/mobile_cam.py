@@ -15,6 +15,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "teddy bear", "hair drier", "toothbrush"
               ]
 escaped_animal = []
+camera_option = 1
 
 ori_width, ori_height = 1280, 720
 target_width, target_height = 180, 180
@@ -30,7 +31,10 @@ except Exception as e:
 
 
 def map_coordinates(x, y):
-    new_x = target_width - int((x * target_width) / ori_width)
+    if camera_option == 0:
+        new_x = target_width - int((x * target_width) / ori_width)
+    else:
+        new_x = int((x * target_width) / ori_width)
     new_y = int((y * target_height) / ori_height)
     return new_x, new_y
 
@@ -55,7 +59,7 @@ model = YOLO('../../YOLO_weights/yolo11n.pt')
 tracker = Sort(max_age=40, min_hits=3, iou_threshold=0.3)
 boundary_line = [0, 450, 1280, 450]
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(camera_option)
 cap.set(3, ori_width)
 cap.set(4, ori_height)
 
