@@ -14,6 +14,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
               "teddy bear", "hair drier", "toothbrush"
               ]
+escaped_animal = []
 
 ori_width, ori_height = 1280, 720
 target_width, target_height = 180, 180
@@ -51,10 +52,10 @@ def process_esp_data():
 
 
 model = YOLO('../../YOLO_weights/yolo11n.pt')
-tracker = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
-boundary_line = [0, 650, 1280, 650]
+tracker = Sort(max_age=40, min_hits=3, iou_threshold=0.3)
+boundary_line = [0, 450, 1280, 450]
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3, ori_width)
 cap.set(4, ori_height)
 
@@ -71,6 +72,7 @@ while True:
     results = model(img, stream=True)
     dets = np.empty((0, 5))
     object_detected = False
+    cur_cls = None
 
     for i in results:
         boxes = i.boxes
@@ -86,6 +88,7 @@ while True:
             if cls in ["cell phone"] and conf >= 0.1:
                 cur_arr = np.array([x1, y1, x2, y2, conf])
                 dets = np.vstack((dets, cur_arr))
+                cur_cls = cls
                 object_detected = True
                 last_detection_time = time.time()
                 cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2 + 40)))
@@ -101,6 +104,10 @@ while True:
         x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
         w, h = x2 - x1, y2 - y1
         cx, cy = x1 + w // 2, y1 + h // 2
+
+        escaped_id = [i[0] for i in escaped_animal]
+        if boundary_line[1] - 20 < cy < boundary_line[1] + 20 and id not in escaped_id:
+            escaped_animal.append([int(id), cur_cls])
 
         dist = ori_height - cy
 
@@ -126,10 +133,10 @@ while True:
         print(f"center: {cy} -- altered: {new_y}")
 
         if current_distance is not None:
-            cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm", (max(0, 0), max(30, 0)))
+            cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)}", (max(0, 0), max(30, 0)))
             default_position_sent = False
         else:
-            cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}",
+            cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, escaped:{len(escaped_animal)}",
                                (max(0, 0), max(30, 0)))
             default_position_sent = False
 
@@ -139,13 +146,14 @@ while True:
         default_position_sent = True
 
     else:
-        cvzone.putTextRect(img, f"No Objects Detected to track",
+        cvzone.putTextRect(img, f"No Objects Detected to track, escaped:{len(escaped_animal)}",
                            (max(0, 0), max(30, 0)))
 
     cv2.line(img, (ori_width // 2, 0), (ori_width // 2, ori_height), (255, 0, 255), 1)
     cv2.line(img, (0, ori_height // 2), (ori_width, ori_height // 2), (255, 0, 255), 1)
 
     cv2.imshow("webcam", img)
+    print(escaped_animal)
     if cv2.waitKey(1) & 0xFF == 27:
         break
 
