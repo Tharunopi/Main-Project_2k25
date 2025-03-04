@@ -5,10 +5,10 @@ time.sleep(2)  # Wait 3 seconds for ESP to initialize
 esp.flush()
 
 positions = [
-    # (0, 0),   # Top-left
-    # (180, 0),  # Top-right
-    # (0, 180),  # Bottom-left
-    # (180, 180),# Bottom-right
+    (0, 0),   # Top-left
+    (180, 0),  # Top-right
+    (0, 180),  # Bottom-left
+    (180, 180),# Bottom-right
     (90, 90)   # Center
 ]
 for i in positions:

@@ -15,7 +15,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "teddy bear", "hair drier", "toothbrush"
               ]
 escaped_animal = []
-camera_option = 1
+camera_option = 0
 
 ori_width, ori_height = 1280, 720
 target_width, target_height = 180, 180
@@ -98,7 +98,7 @@ while True:
                 cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2 + 40)))
 
     result_tracker = tracker.update(dets)
-    cv2.line(img, (boundary_line[0], boundary_line[1]), (boundary_line[2], boundary_line[3]), (0, 0, 255), 2)
+    cv2.line(img, (boundary_line[0], boundary_line[1]), (boundary_line[2], boundary_line[3]), (0, 0, 255), 1)
     shortest_obj_id = None
     min_dist = float('inf')
     closest_coords = None
@@ -144,17 +144,19 @@ while True:
                                (max(0, 0), max(30, 0)))
             default_position_sent = False
 
+
     elif time.time() - last_detection_time > 3 and not default_position_sent and esp:
         data = "90,90\n"
         esp.write(data.encode())
         default_position_sent = True
+        print("Sent default position")
 
     else:
         cvzone.putTextRect(img, f"No Objects Detected to track, escaped:{len(escaped_animal)}",
                            (max(0, 0), max(30, 0)))
 
-    cv2.line(img, (ori_width // 2, 0), (ori_width // 2, ori_height), (255, 0, 255), 1)
-    cv2.line(img, (0, ori_height // 2), (ori_width, ori_height // 2), (255, 0, 255), 1)
+    # cv2.line(img, (ori_width // 2, 0), (ori_width // 2, ori_height), (255, 0, 255), 1)
+    # cv2.line(img, (0, ori_height // 2), (ori_width, ori_height // 2), (255, 0, 255), 1)
 
     cv2.imshow("webcam", img)
     print(escaped_animal)
