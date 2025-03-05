@@ -85,7 +85,7 @@ while True:
                 cur_cls = cls
                 object_detected = True
                 last_detection_time = time.time()
-                cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2 + 40)), )
+                cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2 + 40)), offset=2)
 
     result_tracker = tracker.update(dets)
     cv2.line(img, (boundary_line[0], boundary_line[1]), (boundary_line[2], boundary_line[3]), (0, 0, 255), 1)
@@ -110,8 +110,8 @@ while True:
             shortest_obj_id = id
             closest_coords = (cx, cy)
 
-        cvzone.cornerRect(img, (x1, y1, w, h))
-        cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)))
+        cvzone.cornerRect(img, (x1, y1, w, h), )
+        cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)), offset=2)
         cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
         cv2.line(img, (cx, cy), (cx, ori_height), (0, 255, 0), 1)
 
@@ -127,11 +127,11 @@ while True:
         print(f"center: {cy} -- altered: {new_y}")
 
         if current_distance is not None:
-            cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)}", (max(0, 0), max(30, 0)))
+            cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)}", (max(0, 0), max(30, 0)), offset=2)
             default_position_sent = False
         else:
             cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, escaped:{len(escaped_animal)}",
-                               (max(0, 0), max(30, 0)))
+                               (max(0, 0), max(30, 0)), offset=2)
             default_position_sent = False
 
     #cntrol
@@ -143,7 +143,7 @@ while True:
 
     else:
         cvzone.putTextRect(img, f"No Objects Detected to track, escaped:{len(escaped_animal)}",
-                           (max(0, 0), max(30, 0)))
+                           (max(0, 0), max(30, 0)), 3, 3, offset=2)
 
     # cv2.line(img, (ori_width // 2, 0), (ori_width // 2, ori_height), (255, 0, 255), 1)
     # cv2.line(img, (0, ori_height // 2), (ori_width, ori_height // 2), (255, 0, 255), 1)
