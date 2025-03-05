@@ -144,7 +144,7 @@ while True:
                                (max(0, 0), max(30, 0)))
             default_position_sent = False
 
-
+    #cntrol
     elif time.time() - last_detection_time > 3 and not default_position_sent and esp:
         data = "90,90\n"
         esp.write(data.encode())
