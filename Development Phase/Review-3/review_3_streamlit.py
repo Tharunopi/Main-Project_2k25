@@ -2,18 +2,28 @@ from ultralytics import YOLO
 import cv2, math, cvzone, time, serial
 from sort import *
 import numpy as np
+import matplotlib.pyplot as plt
+matplotlib.use('Agg')
+import pandas as pd
 from datetime import datetime
 import streamlit as st
-
 
 def main():
     st.title("AI Driven Ultrasound Fencing")
 
     frame_placeholder = st.empty()
-    status_placeholder = st.sidebar.empty()
-    status_placeholder.title("South Zone TN")
+    st.sidebar.title("South Zone TN")
     time_now = datetime.now().strftime("%d-%m-%Y")
-    status_placeholder.write(f"Date: {time_now}")
+    st.sidebar.write(f"Date: {time_now}")
+
+    coordinates_placeholder = st.sidebar.empty()
+    tracking_placeholder = st.sidebar.empty()
+    distance_placeholder = st.sidebar.empty()
+    escaped_placeholder = st.sidebar.empty()
+    graph_placeholder = st.sidebar.empty()
+
+    distance_hisory = []
+    pixel_distance_hisory = []
 
     camera_option = 0
 
@@ -138,6 +148,26 @@ def main():
         if shortest_obj_id is not None and closest_coords is not None:
             cx, cy = closest_coords
             new_x, new_y = map_coordinates(cx, cy)
+            coordinates_placeholder.write(f"Original: ({cx},{cy}) → Altered: ({new_x},{new_y})")
+
+            tracking_info = f"ID: {shortest_obj_id}, Pixel distance: {min_dist:.1f}"
+            if current_distance is not None:
+                tracking_info += f", Ultrasonic: {current_distance} cm"
+                distance_hisory.append(current_distance)
+                pixel_distance_hisory.append(min_dist)
+                chart_data = pd.DataFrame({
+                    "Ultrasonic distance": distance_hisory,
+                    "Pixel distance": pixel_distance_hisory
+                })
+                graph_placeholder.line_chart(chart_data, x_label="Frames", y_label="Distance")
+                fig, ax = plt.subplots()
+                ax.set_xlim(0, 180)
+                ax.set_ylim(0, 180)
+                ax.scatter(new_x, new_y, color="red", s=100)
+                distance_placeholder.pyplot(fig)
+            tracking_placeholder.write(tracking_info)
+
+            escaped_placeholder.write(f"Total escaped: {len(escaped_animal)}")
 
             if esp:
                 data = f"{new_x},{new_y}\n"
@@ -147,26 +177,26 @@ def main():
                 cvzone.putTextRect(img,
                                    f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)}",
                                    (max(0, 0), max(30, 0)), offset=2)
-                # st.text(
-                #     f"id:{shortest_obj_id}, pixel distance:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)} is the closest animal")
-                # default_position_sent = False
+                default_position_sent = False
             else:
                 cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, escaped:{len(escaped_animal)}",
                                    (max(0, 0), max(30, 0)), offset=2)
-                # st.text(
-                #     f"id:{shortest_obj_id}, pixel distance:{min_dist}, escaped:{len(escaped_animal)}")
-                # default_position_sent = False
+                default_position_sent = False
 
         elif time.time() - last_detection_time > 3 and not default_position_sent and esp:
             data = "90,90\n"
             esp.write(data.encode())
             default_position_sent = True
-            status_placeholder.text("Sent default position")
+            # status_placeholder.text("Sent default position")
 
         else:
             cvzone.putTextRect(img, f"No Objects Detected to track, escaped:{len(escaped_animal)}",
                                (max(0, 0), max(30, 0)), 3, 3, offset=2)
-            # st.text(f"No Objects Detected to track, escaped:{len(escaped_animal)}")
+            coordinates_placeholder.write("No coordinates available")
+            tracking_placeholder.write("No objects detected")
+            distance_placeholder.empty()
+            graph_placeholder.empty()
+            escaped_placeholder.write(f"Total escaped: {len(escaped_animal)}")
 
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
