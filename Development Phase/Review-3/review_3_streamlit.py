@@ -97,7 +97,7 @@ def main():
                 conf = math.ceil((j.conf[0] * 100)) / 100
                 cls = classNames[int(j.cls[0])]
 
-                if cls in ["hand"] and conf >= 0.6:
+                if cls in ["Elephant"] and conf >= 0.6:
                     cur_arr = np.array([x1, y1, x2, y2, conf])
                     dets = np.vstack((dets, cur_arr))
                     cur_cls = cls
@@ -147,15 +147,15 @@ def main():
                 cvzone.putTextRect(img,
                                    f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)}",
                                    (max(0, 0), max(30, 0)), offset=2)
-                st.text(
-                    f"id:{shortest_obj_id}, pixel distance:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)} is the closest animal")
-                default_position_sent = False
+                # st.text(
+                #     f"id:{shortest_obj_id}, pixel distance:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)} is the closest animal")
+                # default_position_sent = False
             else:
                 cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, escaped:{len(escaped_animal)}",
                                    (max(0, 0), max(30, 0)), offset=2)
-                st.text(
-                    f"id:{shortest_obj_id}, pixel distance:{min_dist}, escaped:{len(escaped_animal)}")
-                default_position_sent = False
+                # st.text(
+                #     f"id:{shortest_obj_id}, pixel distance:{min_dist}, escaped:{len(escaped_animal)}")
+                # default_position_sent = False
 
         elif time.time() - last_detection_time > 3 and not default_position_sent and esp:
             data = "90,90\n"
@@ -166,7 +166,7 @@ def main():
         else:
             cvzone.putTextRect(img, f"No Objects Detected to track, escaped:{len(escaped_animal)}",
                                (max(0, 0), max(30, 0)), 3, 3, offset=2)
-            st.text(f"No Objects Detected to track, escaped:{len(escaped_animal)}")
+            # st.text(f"No Objects Detected to track, escaped:{len(escaped_animal)}")
 
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
