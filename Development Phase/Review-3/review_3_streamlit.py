@@ -147,13 +147,13 @@ def main():
                 cvzone.putTextRect(img,
                                    f"id:{shortest_obj_id}, dist:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)}",
                                    (max(0, 0), max(30, 0)), offset=2)
-                status_placeholder.text(
+                st.text(
                     f"id:{shortest_obj_id}, pixel distance:{min_dist}, distance:{current_distance}cm, escaped:{len(escaped_animal)} is the closest animal")
                 default_position_sent = False
             else:
                 cvzone.putTextRect(img, f"id:{shortest_obj_id}, dist:{min_dist}, escaped:{len(escaped_animal)}",
                                    (max(0, 0), max(30, 0)), offset=2)
-                status_placeholder.text(
+                st.text(
                     f"id:{shortest_obj_id}, pixel distance:{min_dist}, escaped:{len(escaped_animal)}")
                 default_position_sent = False
 
@@ -166,7 +166,7 @@ def main():
         else:
             cvzone.putTextRect(img, f"No Objects Detected to track, escaped:{len(escaped_animal)}",
                                (max(0, 0), max(30, 0)), 3, 3, offset=2)
-            status_placeholder.text(f"No Objects Detected to track, escaped:{len(escaped_animal)}")
+            st.text(f"No Objects Detected to track, escaped:{len(escaped_animal)}")
 
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
