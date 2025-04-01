@@ -24,6 +24,8 @@ def main():
 
     distance_hisory = []
     pixel_distance_hisory = []
+    all_x_points = []
+    all_y_points = []
 
     camera_option = 0
 
@@ -82,6 +84,8 @@ def main():
     run_status = True
 
     while run_status:
+        all_x_points = []
+        all_y_points = []
         distance = process_esp_data()
         if distance is not None:
             current_distance = distance
@@ -126,6 +130,9 @@ def main():
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
             cx, cy = x1 + w // 2, y1 + h // 2
+            new_x_, new_y_ = map_coordinates(cx, cy)
+            all_x_points.append(new_x_)
+            all_y_points.append(new_y_)
 
             escaped_id = [i[0] for i in escaped_animal]
             if boundary_line[1] - 20 < cy < boundary_line[1] + 20 and id not in escaped_id:
@@ -160,11 +167,11 @@ def main():
                     "Pixel distance": pixel_distance_hisory
                 })
                 graph_placeholder.line_chart(chart_data, x_label="Frames", y_label="Distance")
-                fig, ax = plt.subplots()
-                ax.set_xlim(0, 180)
-                ax.set_ylim(0, 180)
-                ax.scatter(new_x, new_y, color="red", s=100)
-                distance_placeholder.pyplot(fig)
+                # fig, ax = plt.subplots()
+                # ax.set_xlim(0, 180)
+                # ax.set_ylim(0, 180)
+                # ax.scatter(new_x, new_y, color="red", s=100)
+                # distance_placeholder.pyplot(fig)
             tracking_placeholder.write(tracking_info)
 
             escaped_placeholder.write(f"Total escaped: {len(escaped_animal)}")
@@ -197,6 +204,14 @@ def main():
             distance_placeholder.empty()
             graph_placeholder.empty()
             escaped_placeholder.write(f"Total escaped: {len(escaped_animal)}")
+
+        if all_x_points:
+            fig, ax = plt.subplots()
+            ax.set_xlim(0, 180)
+            ax.set_ylim(0, 180)
+            ax.scatter(all_x_points, all_y_points, color="red", s=100)
+            distance_placeholder.pyplot(fig)
+            plt.close(fig)
 
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
