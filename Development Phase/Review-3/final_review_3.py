@@ -129,7 +129,7 @@ def main():
             x1, y1, x2, y2, id = i
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
-            cx, cy = x1 + w // 2, y1 + h // 2
+            cx, cy = x1 + w // 2, y1 + h // 2 # cx = 45, cy = 80, 20, 30
             new_x_, new_y_ = map_coordinates(cx, cy)
             all_x_points.append(new_x_)
             all_y_points.append(new_y_)
