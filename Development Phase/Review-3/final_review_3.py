@@ -129,10 +129,10 @@ def main():
             x1, y1, x2, y2, id = i
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
-            cx, cy = x1 + w // 2, y1 + h // 2 # cx = 45, cy = 80, 20, 30
+            cx, cy = x1 + w // 2, y1 + h // 2 
             new_x_, new_y_ = map_coordinates(cx, cy)
-            all_x_points.append(new_x_)
-            all_y_points.append(new_y_)
+            all_x_points.append(ori_width - cx)
+            all_y_points.append(ori_height - cy)
 
             escaped_id = [i[0] for i in escaped_animal]
             if boundary_line[1] - 20 < cy < boundary_line[1] + 20 and id not in escaped_id:
@@ -207,8 +207,8 @@ def main():
 
         if all_x_points:
             fig, ax = plt.subplots()
-            ax.set_xlim(0, 180)
-            ax.set_ylim(0, 180)
+            ax.set_xlim(0, ori_width)
+            ax.set_ylim(0, ori_height)
             ax.scatter(all_x_points, all_y_points, color="red", s=100)
             distance_placeholder.pyplot(fig)
             plt.close(fig)
