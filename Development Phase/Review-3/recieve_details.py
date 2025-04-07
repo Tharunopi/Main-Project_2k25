@@ -1,23 +1,19 @@
-import socket
+import paho.mqtt.client as mqtt
 
-# Server settings
-HOST = "0.0.0.0"  # Accept connections on all available interfaces
-PORT = 65432       # Port number (make sure it's not blocked by firewall)
+def on_connect(client, userdata, flags, rc):
+    print(f"Connected with result code {rc}")
+    client.subscribe("Elephant_cx_cy")
 
-# Create socket
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind((HOST, PORT))
-server_socket.listen(1)  # Listen for 1 connection at a time
-print(f"🚀 Server listening on {HOST}:{PORT}")
+def on_message(client, userdata, msg):
+    print(f"Received message: {msg.payload.decode()} on topic {msg.topic}")
 
-# Accept client connection
-conn, addr = server_socket.accept()
-print(f"✅ Connected by {addr}")
+mqttBroker = "mqtt.eclipseprojects.io"
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION1)
 
-# Receive data
-data = conn.recv(1024).decode()
-print(f"📩 Received data: {data}")
 
-# Close connection
-conn.close()
-server_socket.close()
+client.on_connect = on_connect
+client.on_message = on_message
+
+
+client.connect(mqttBroker)
+client.loop_forever() 
