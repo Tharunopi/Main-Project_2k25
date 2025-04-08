@@ -4,7 +4,7 @@ import time
 mqttBroker = "mqtt.eclipseprojects.io"
 
 client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION1)
-client.client_id = "Remote_Graph"  # Set client_id as a property instead
+client.client_id = "Remote_Graph" 
 
 client.connect(mqttBroker)
 i = 0
