@@ -1,11 +1,12 @@
 class StorePoints:
-    def __init__(self, originalWidth=1280, originalHeight=720, targetWidth=180, targetHeight=180):
+    def __init__(self, originalWidth=1280, originalHeight=720, targetWidth=180, targetHeight=180, boundaryLine = [0, 450, 1280, 450]):
         self.allXpoints = []
         self.allYpoints = []
         self.originalWidth = int(originalWidth)
         self.originalHeight = int(originalHeight)
         self.targetWidth = int(targetWidth)
         self.targetHeight = int(targetHeight)
+        self.boundaryLine = boundaryLine
 
     def getAllXpoints(self):
         return self.allXpoints
@@ -24,3 +25,6 @@ class StorePoints:
     
     def gettargetHeight(self):
         return self.targetHeight
+    
+    def getboundaryLine(self):
+        return self.boundaryLine

@@ -2,5 +2,5 @@ from abc import ABC, abstractmethod
 
 class DetectObjects(ABC):
     @abstractmethod
-    def forLoopResults(self):
+    def forLoopResults(self, results):
         pass

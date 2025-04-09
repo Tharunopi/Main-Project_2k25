@@ -7,14 +7,12 @@ from util.ClassName import ClassNames
 from util.ConfidenceLevel import ConfidenceLevel
 
 class DetectObjectsImpl(DetectObjects):
-    def forLoopResults(self, results):
+    def forLoopResults(self, results, dets, curCls):
         
         availableClassNames = ClassNames.getAvailableClassNames()
         wantedClassNames = ClassNames.getWantedClassNames()
         confLevel = ConfidenceLevel.getConfidenceLevel()
 
-        dets = np.empty((0, 5))
-        curCls = None
         objectDetected = False
         lastDetectionTime = None
         conf = None
@@ -41,7 +39,7 @@ class DetectObjectsImpl(DetectObjects):
                     lastDetectionTime = time.time()
                     # cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2 + 40)), offset=2)
 
-        return conf, curCls, x1, y1, x2, y2, w, h, cx, cy
+        return conf, curCls, x1, y1, x2, y2, w, h, cx, cy, dets
         # return dets, curCls, objectDetected, lastDetectionTime
 
 
