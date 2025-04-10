@@ -8,6 +8,7 @@ class ESP8266Connection:
             esp = serial.Serial("COM24", 9600, timeout=1)
             time.sleep(2)
             esp.flushInput()
+            return esp
         except Exception as e:
             print(f"Error connecting to ESP8266: {e}")
-            esp = None
+            return None

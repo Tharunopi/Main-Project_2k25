@@ -1,6 +1,10 @@
+from entity.StorePoints import StorePoints
+
+all_points = StorePoints()
+
 class Normalize:
     @staticmethod
-    def map_coordinates(x, y, cameraOption, originalWidth, originalHeight, targetWidth=180, targetHeight=180):
+    def map_coordinates(x, y, cameraOption=all_points.getcameraOption(), originalWidth=all_points.getoriginalWidth(), originalHeight=all_points.getoriginalHeight(), targetWidth=all_points.gettargetWidth(), targetHeight=all_points.gettargetHeight()):
         if cameraOption == 0:
             new_x = targetWidth - int((x * targetHeight) / originalWidth)
             

@@ -1,4 +1,4 @@
-import cv2, cvzone
+import cv2, cvzone, time
 import numpy as np
 
 from dao.DetectObjectsImpl import DetectObjectsImpl
@@ -8,6 +8,7 @@ from entity.Camera import Camera
 from entity.StorePoints import StorePoints
 
 from util.ModelLoading import ModelLoading
+from util.TrackerLoading import TrackerLoading
 
 points = StorePoints()
 modelLoad = ModelLoading()
@@ -15,7 +16,9 @@ detectObjects = DetectObjectsImpl()
 trackObjects = TrackObjectsImpl()
 
 model = modelLoad.loadModel()
+tracker = TrackerLoading.loadTracker()
 cam = Camera(points.getoriginalWidth(), points.getoriginalHeight())
+lastDetectionTime = time.time()
 
 while True:
     img = cam.getFrame()
@@ -24,12 +27,17 @@ while True:
     dets = np.empty((0, 5))
     curCls = None
 
-    conf, cls, x1, y1, x2, y2, w, h, cx, cy, dets = detectObjects.forLoopResults(results=results, dets=dets, curCls=curCls)
+    conf, curCls, x1, y1, x2, y2, w, h, cx, cy, dets = detectObjects.forLoopResults(results=results, dets=dets, curCls=curCls, lastDetectionTime=lastDetectionTime)
 
-    resultTracker = 
+    resultTracker = tracker.update(dets=dets)
+    if len(resultTracker) > 0:
 
-    x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escaped_animal, shortestObjId, closestCoords = trackObjects.forLoopResults()
+        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escaped_animal, shortestObjId, closestCoords, minDist, id, dist = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
 
-    cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+        cvzone.cornerRect(img, (x1, y1, w, h), )
+        cvzone.putTextRect(img, f"conf:{conf}, cls:{curCls}", (max(0, x1), max(30, y2 + 40)), offset=2)
+        cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)), offset=2)
+        cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+
     cv2.imshow("Camera", img)
     cv2.waitKey(1)
