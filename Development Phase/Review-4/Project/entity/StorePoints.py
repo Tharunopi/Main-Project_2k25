@@ -3,6 +3,7 @@ class StorePoints:
         self.allXpoints = []
         self.allYpoints = []
         self.distanceHisory = []
+        self.escapedAnimal = []
         self.pixelDistanceHistory = []
         self.originalWidth = int(originalWidth)
         self.originalHeight = int(originalHeight)
@@ -41,6 +42,9 @@ class StorePoints:
     def getdistanceHisory(self):
         return self.distanceHisory
     
+    def getescapedAnimal(self):
+        return self.escapedAnimal
+    
     def updateAllXpoints(self, value):
         self.allXpoints.append(value)
 
@@ -52,3 +56,9 @@ class StorePoints:
 
     def updatepixelDistanceHistory(self, value):
         self.pixelDistanceHistory.append(value)
+
+    def updateescapedAnimal(self, value):
+        escapedId = [i[0] for i in self.getescapedAnimal()]
+        if value:
+            if value[0] not in escapedId:
+                self.escapedAnimal.append(value)

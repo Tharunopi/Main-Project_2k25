@@ -35,17 +35,20 @@ while True:
     resultTracker = tracker.update(dets=dets)
     if len(resultTracker) > 0:
 
-        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escaped_animal, shortestObjId, closestCoords, minDist, id, dist = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
+        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
+        points.updateescapedAnimal(escapedAnimal)
 
         new_x, new_y, currentDistance = espActivity.espManipulation(shortestObjId=shortestObjId, closestCoords=closestCoords)
         points.updatedistanceHisory(currentDistance)
         points.updatepixelDistanceHistory(minDist)
 
-        cvzone.cornerRect(img, (x1, y1, w, h), )
-        cvzone.putTextRect(img, f"conf:{conf}, cls:{curCls}", (max(0, x1), max(30, y2 + 40)), offset=2)
-        cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)), offset=2)
-        cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
-        cvzone.putTextRect(img, f"Cam:1 Object Detected", (max(0, 10), max(30, 10)), offset=2)
+        for i in trackedObjects:
+            x1, y1, x2, y2, w, h, cx, cy, id, dist = i
+            cvzone.cornerRect(img, (x1, y1, w, h), )
+            cvzone.putTextRect(img, f"conf:{conf}, cls:{curCls}", (max(0, x1), max(30, y2 + 40)), offset=2)
+            cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)), offset=2)
+            cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+            cvzone.putTextRect(img, f"Cam:1 Object Detected - Escaped: {len(points.getescapedAnimal())}", (max(0, 10), max(30, 10)), offset=2)
         
     
     else:
