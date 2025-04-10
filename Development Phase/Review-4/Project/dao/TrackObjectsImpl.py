@@ -8,7 +8,7 @@ class TrackObjectsImpl(TrackObjects):
     def __init__(self):
         self.all_points = StorePoints()
 
-    def forLoopResults(self, resultTracker, curCls, lastDetectionTime):
+    def forLoopResults(self, resultTracker, curCls):
         all_x_points = []
         all_y_points = []
         escaped_animal = []

@@ -7,33 +7,41 @@ from entity.ProcessESPData import ProcessESPData
 from util.ESP8266Connection import ESP8266Connection
 
 class EspActivityImpl(EspActivity):
-    def espManipulation(self, shortestObjId, closestCoords, lastDetectionTime):
-        esp = ESP8266Connection.getConnection()
-        espData = ProcessESPData(esp=esp)
-        distance = espData.process_esp_data()
+    def __init__(self):
+        self.defaultPositionSent = False
+        self.esp = ESP8266Connection.getConnection()
 
-        currentDistance = None
+    def espManipulation(self, shortestObjId, closestCoords):
+        try:
+            espData = ProcessESPData(esp=self.esp)
+            distance = espData.process_esp_data()
 
-        if distance is not None:
-            currentDistance = distance
+            currentDistance = None
 
-        if shortestObjId is not None and closestCoords is not None:
-            cx, cy = closestCoords
-            new_x, new_y = Normalize.map_coordinates(cx, cy)
-            if esp:
-                data = f"{new_x},{new_y}\n"
-                esp.write(data.encode())
+            if distance is not None:
+                currentDistance = distance
+                
 
-            if currentDistance is not None:
-                default_position_sent = False
+            if shortestObjId is not None and closestCoords is not None:
+                cx, cy = closestCoords
+                new_x, new_y = Normalize.map_coordinates(cx, cy)
+                if self.esp:
+                    data = f"{new_x},{new_y}\n"
+                    self.esp.write(data.encode())
+                    self.defaultPositionSent = False
 
-            else:
-                default_position_sent = False
+                return (new_x, new_y, currentDistance)
 
-        elif time.time() - lastDetectionTime > 3 and not default_position_sent and esp:
-            data = "90,90\n"
-            esp.write(data.encode())
-            default_position_sent = True
+        except Exception as e:
+            print(f"Error: {e}")
 
-        else:
-            detectionStatus = "No objects Detected"
+    def skipTime(self, lastDetectionTime):
+        timeDiff = time.time() - lastDetectionTime
+
+        if timeDiff > 3 and self.defaultPositionSent == False and self.esp is not None:
+                data = "90,90\n"
+                self.esp.write(data.encode())
+                self.defaultPositionSent = True
+                with open("log.txt", 'w') as f:
+                    f.write(f"{self.defaultPositionSent}, {timeDiff}")
+                return (self.defaultPositionSent, timeDiff)

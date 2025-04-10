@@ -3,6 +3,8 @@ import numpy as np
 
 from dao.DetectObjectsImpl import DetectObjectsImpl
 from dao.TrackObjectsImpl import TrackObjectsImpl
+from dao.EspActivityImpl import EspActivityImpl
+from dao.ChartsImpl import ChartsImpl
 
 from entity.Camera import Camera
 from entity.StorePoints import StorePoints
@@ -14,6 +16,7 @@ points = StorePoints()
 modelLoad = ModelLoading()
 detectObjects = DetectObjectsImpl()
 trackObjects = TrackObjectsImpl()
+espActivity = EspActivityImpl()
 
 model = modelLoad.loadModel()
 tracker = TrackerLoading.loadTracker()
@@ -27,17 +30,27 @@ while True:
     dets = np.empty((0, 5))
     curCls = None
 
-    conf, curCls, x1, y1, x2, y2, w, h, cx, cy, dets = detectObjects.forLoopResults(results=results, dets=dets, curCls=curCls, lastDetectionTime=lastDetectionTime)
+    conf, curCls, x1, y1, x2, y2, w, h, cx, cy, dets, lastDetectionTime = detectObjects.forLoopResults(results=results, dets=dets, curCls=curCls, lastDetectionTime=lastDetectionTime)
 
     resultTracker = tracker.update(dets=dets)
     if len(resultTracker) > 0:
 
         x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escaped_animal, shortestObjId, closestCoords, minDist, id, dist = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
 
+        new_x, new_y, currentDistance = espActivity.espManipulation(shortestObjId=shortestObjId, closestCoords=closestCoords)
+        points.updatedistanceHisory(currentDistance)
+        points.updatepixelDistanceHistory(minDist)
+
         cvzone.cornerRect(img, (x1, y1, w, h), )
         cvzone.putTextRect(img, f"conf:{conf}, cls:{curCls}", (max(0, x1), max(30, y2 + 40)), offset=2)
         cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)), offset=2)
         cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+        cvzone.putTextRect(img, f"Cam:1 Object Detected", (max(0, 10), max(30, 10)), offset=2)
+        
+    
+    else:
+        status = espActivity.skipTime(lastDetectionTime=lastDetectionTime)
+        cvzone.putTextRect(img, f"Cam:1 No Objects Detected", (max(0, 10), max(30, 10)), offset=2)
 
     cv2.imshow("Camera", img)
     cv2.waitKey(1)

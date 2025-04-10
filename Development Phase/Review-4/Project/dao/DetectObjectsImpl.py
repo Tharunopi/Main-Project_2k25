@@ -14,7 +14,6 @@ class DetectObjectsImpl(DetectObjects):
         confLevel = ConfidenceLevel.getConfidenceLevel()
 
         objectDetected = False
-        lastDetectionTime = None
         conf = None
         x1, y1, x2, y2 = None, None, None, None
         w, h = None, None
@@ -37,10 +36,8 @@ class DetectObjectsImpl(DetectObjects):
                     curCls = cls
                     objectDetected = True
                     lastDetectionTime = time.time()
-                    # cvzone.putTextRect(img, f"conf:{conf}", (max(0, x1), max(30, y2 + 40)), offset=2)
 
         return conf, curCls, x1, y1, x2, y2, w, h, cx, cy, dets, lastDetectionTime
-        # return dets, curCls, objectDetected, lastDetectionTime
 
 
             
