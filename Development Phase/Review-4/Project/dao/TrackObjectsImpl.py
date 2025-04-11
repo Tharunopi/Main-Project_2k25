@@ -19,6 +19,7 @@ class TrackObjectsImpl(TrackObjects):
         closestCoords = None
         id, dist = None, None
         x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_ = None, None, None, None, None, None, None, None, None, None
+        newEscapes = []
 
         for i in resultTracker:
             x1, y1, x2, y2, id = i
@@ -27,11 +28,10 @@ class TrackObjectsImpl(TrackObjects):
             cx, cy = x1 + w // 2, y1 + h // 2 
             new_x_, new_y_ = Normalize.map_coordinates(x=cx, y=cy, cameraOption=self.all_points.getcameraOption(), originalWidth=self.all_points.getoriginalWidth(), originalHeight=self.all_points.getoriginalHeight())
             all_x_points.append(self.all_points.getoriginalWidth() - cx)
-            all_y_points.append(self.all_points.getoriginalHeight() - cy)
+            all_y_points.append(self.all_points.getoriginalHeight() - cy)                
 
-            escaped_id = [i[0] for i in self.all_points.getescapedAnimal()]
-            if self.all_points.getboundaryLine()[1] - 20 < cy < self.all_points.getboundaryLine()[1] + 20 and id not in escaped_id:
-                escaped_animal.append([int(id), curCls])
+            if self.all_points.processAnimal(id, curCls, cx, cy):
+                newEscapes.append(id)
                 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 warningMsg = f"{curCls} is likely to escaped the marked boundary. {now} +5:30 UTC"
 
@@ -45,4 +45,6 @@ class TrackObjectsImpl(TrackObjects):
             objData = (x1, y1, x2, y2, w, h, cx, cy, id, dist)
             trackedObjects.append(objData)
             
-        return x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escaped_animal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects
+        escapedAnimal = set([i.primaryName for i in self.all_points.getEscapedAnimals()])
+            
+        return x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes

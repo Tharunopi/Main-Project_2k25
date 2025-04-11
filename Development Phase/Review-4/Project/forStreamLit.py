@@ -1,5 +1,7 @@
-import cv2, cvzone, time
+import cv2, cvzone, time, sys
 import numpy as np
+
+sys.path.append(r"C:\Stack overflow\Main-Project_2k25\Development Phase\Review-4\Project")
 
 from dao.DetectObjectsImpl import DetectObjectsImpl
 from dao.TrackObjectsImpl import TrackObjectsImpl
@@ -23,7 +25,14 @@ tracker = TrackerLoading.loadTracker()
 cam = Camera(points.getoriginalWidth(), points.getoriginalHeight())
 lastDetectionTime = time.time()
 
-while True:
+escapeCount = 0
+escapedAnimal = None
+
+def getFrameForStreamlit():
+    global lastDetectionTime
+    global escapeCount
+    global escapedAnimal
+
     img = cam.getFrame()
 
     results = model(img, stream=True)
@@ -49,12 +58,11 @@ while True:
             cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
         escapeCount = points.getEscapeCount()
-        cvzone.putTextRect(img, f"Cam:1 Object Detected - Escaped: {escapeCount, escapedAnimal}", (max(0, 10), max(30, 10)), offset=2)
+        cvzone.putTextRect(img, f"Cam:1 Object Detected - Escaped: {escapeCount}", (max(0, 10), max(30, 10)), offset=2)
         
     
     else:
         status = espActivity.skipTime(lastDetectionTime=lastDetectionTime)
         cvzone.putTextRect(img, f"Cam:1 No Objects Detected", (max(0, 10), max(30, 10)), offset=2)
 
-    cv2.imshow("Camera", img)
-    cv2.waitKey(1)
+    return img, escapeCount, escapedAnimal
