@@ -31,9 +31,8 @@ class TrackObjectsImpl(TrackObjects):
             all_y_points.append(self.all_points.getoriginalHeight() - cy)                
 
             if self.all_points.processAnimal(id, curCls, cx, cy):
-                newEscapes.append(id)
                 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                warningMsg = f"{curCls} is likely to escaped the marked boundary. {now} +5:30 UTC"
+                newEscapes.append([id, curCls, now])
 
             dist = self.all_points.getoriginalHeight() - cy
 
@@ -46,5 +45,6 @@ class TrackObjectsImpl(TrackObjects):
             trackedObjects.append(objData)
             
         escapedAnimal = set([i.primaryName for i in self.all_points.getEscapedAnimals()])
+        allAnimal = self.all_points.allAnimals()
             
-        return x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes
+        return x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes, allAnimal

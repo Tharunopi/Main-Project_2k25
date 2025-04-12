@@ -27,11 +27,18 @@ lastDetectionTime = time.time()
 
 escapeCount = 0
 escapedAnimal = None
+newEscapes = None
+allAnimal = None
+new_x, new_y = 0, 0
 
 def getFrameForStreamlit():
     global lastDetectionTime
     global escapeCount
     global escapedAnimal
+    global newEscapes
+    global allAnimal
+    global new_x
+    global new_y
 
     img = cam.getFrame()
 
@@ -44,7 +51,7 @@ def getFrameForStreamlit():
     resultTracker = tracker.update(dets=dets)
     if len(resultTracker) > 0:
 
-        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
+        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes, allAnimal = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
 
         new_x, new_y, currentDistance = espActivity.espManipulation(shortestObjId=shortestObjId, closestCoords=closestCoords)
         points.updatedistanceHisory(currentDistance)
@@ -65,4 +72,4 @@ def getFrameForStreamlit():
         status = espActivity.skipTime(lastDetectionTime=lastDetectionTime)
         cvzone.putTextRect(img, f"Cam:1 No Objects Detected", (max(0, 10), max(30, 10)), offset=2)
 
-    return img, escapeCount, escapedAnimal
+    return img, escapeCount, escapedAnimal, newEscapes, allAnimal, new_x, new_y

@@ -77,3 +77,6 @@ class StorePoints:
     def getEscapedAnimals(self):
         escaped = [i for i in self.animals.values() if i.escaped]
         return escaped
+    
+    def allAnimals(self):
+        return self.animals
