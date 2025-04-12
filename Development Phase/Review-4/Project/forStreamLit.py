@@ -6,7 +6,6 @@ sys.path.append(r"C:\Stack overflow\Main-Project_2k25\Development Phase\Review-4
 from dao.DetectObjectsImpl import DetectObjectsImpl
 from dao.TrackObjectsImpl import TrackObjectsImpl
 from dao.EspActivityImpl import EspActivityImpl
-from dao.ChartsImpl import ChartsImpl
 
 from entity.Camera import Camera
 from entity.StorePoints import StorePoints
@@ -30,6 +29,7 @@ escapedAnimal = None
 newEscapes = None
 allAnimal = None
 new_x, new_y = 0, 0
+status = False
 
 def getFrameForStreamlit():
     global lastDetectionTime
@@ -39,6 +39,7 @@ def getFrameForStreamlit():
     global allAnimal
     global new_x
     global new_y
+    global status
 
     img = cam.getFrame()
 

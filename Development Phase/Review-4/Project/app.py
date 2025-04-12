@@ -1,11 +1,17 @@
 import streamlit as st
 import cv2, time
 import pandas as pd
+import matplotlib.pyplot as plt
+plt.matplotlib.use('Agg')
 
 from entity.ProcessAllAnimal import ProcessAllAnimal
+from dao.ChartsImpl import ChartsImpl
+
 from forStreamLit import getFrameForStreamlit
 
 st.title("AI-Driven Fencing")
+
+charts = ChartsImpl()
 
 imgHolder = st.empty()
 cameraHolder = st.sidebar.title("Camera: 1")
@@ -15,10 +21,16 @@ escapeCountHolder = st.sidebar.empty()
 escapedAnimalHolder = st.sidebar.empty()
 
 xMovements, yMovements = st.sidebar.columns(2)
-
+with xMovements:
+    xMetricHolder = st.empty()
+with yMovements:
+    yMetricHolder = st.empty()
 
 fullAnimalDetails = st.sidebar.empty()
 warningMessagePlaceHolder = st.empty()
+
+lineChartHolder = st.sidebar.empty()
+subPlotHolder = st.sidebar.empty()
 
 old_x, old_y = 90, 90
 
@@ -48,12 +60,20 @@ while True:
         diffX = new_x - old_x
         diffY = new_y - old_y
 
-        with xMovements:
-            st.metric("X-Movement", f"{new_x}", f"{diffX}", border=True)
-        with yMovements:
-            st.metric("Y-Movement", f"{new_y}", f"{diffY}", border=True)
+        xMetricHolder.metric("X-Movement", f"{new_x}", f"{diffX}", border=True)
+       
+        yMetricHolder.metric("Y-Movement", f"{new_y}", f"{diffY}", border=True)
 
         old_x = new_x
         old_y = new_y
+
+    lineChartHolder.line_chart(charts.lineChart(), x_label="Frames", y_label="Distance")
+
+    fig = charts.subPlots()
+    if fig is not None:
+        subPlotHolder.pyplot(fig)
+        plt.close(fig)
+
+
 
     imgHolder.image(img_rgb, channels="RGB")

@@ -44,4 +44,4 @@ class EspActivityImpl(EspActivity):
                 self.defaultPositionSent = True
                 with open("log.txt", 'w') as f:
                     f.write(f"{self.defaultPositionSent}, {timeDiff}")
-                return (self.defaultPositionSent, timeDiff)
+                return True

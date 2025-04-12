@@ -4,7 +4,6 @@ import numpy as np
 from dao.DetectObjectsImpl import DetectObjectsImpl
 from dao.TrackObjectsImpl import TrackObjectsImpl
 from dao.EspActivityImpl import EspActivityImpl
-from dao.ChartsImpl import ChartsImpl
 
 from entity.Camera import Camera
 from entity.StorePoints import StorePoints
