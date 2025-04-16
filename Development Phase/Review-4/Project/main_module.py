@@ -34,7 +34,7 @@ while True:
     resultTracker = tracker.update(dets=dets)
     if len(resultTracker) > 0:
 
-        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes, allAnimal = trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
+        x1, y1, x2, y2, w, h, cx, cy, new_x_, new_y_, escapedAnimal, shortestObjId, closestCoords, minDist, id, dist, trackedObjects, newEscapes, allAnimal= trackObjects.forLoopResults(resultTracker=resultTracker, curCls=curCls)
 
         new_x, new_y, currentDistance = espActivity.espManipulation(shortestObjId=shortestObjId, closestCoords=closestCoords)
         points.updatedistanceHisory(currentDistance)

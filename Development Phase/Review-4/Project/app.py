@@ -6,12 +6,14 @@ plt.matplotlib.use('Agg')
 
 from entity.ProcessAllAnimal import ProcessAllAnimal
 from dao.ChartsImpl import ChartsImpl
+from entity.StorePoints import StorePoints
 
 from forStreamLit import getFrameForStreamlit
 
 st.title("AI-Driven Fencing")
 
 charts = ChartsImpl()
+points = StorePoints()
 
 imgHolder = st.empty()
 cameraHolder = st.sidebar.title("Camera: 1")
@@ -35,7 +37,7 @@ subPlotHolder = st.sidebar.empty()
 old_x, old_y = 90, 90
 
 while True:
-    img, escapeCount, escapedAnimal, newEscapes, allAnimal, new_x, new_y = getFrameForStreamlit()
+    img, escapeCount, escapedAnimal, newEscapes, allAnimal, new_x, new_y, allXpoints, allYpoints = getFrameForStreamlit()
 
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
@@ -69,10 +71,12 @@ while True:
 
     lineChartHolder.line_chart(charts.lineChart(), x_label="Frames", y_label="Distance")
 
-    fig = charts.subPlots()
-    if fig is not None:
-        subPlotHolder.pyplot(fig)
-        plt.close(fig)
+    fig, ax = plt.subplots()
+    ax.set_xlim(0, points.getoriginalWidth())
+    ax.set_ylim(0, points.getoriginalHeight())
+    ax.scatter(allXpoints, allYpoints, color="red", s=100)
+    subPlotHolder.pyplot(fig=fig)
+    plt.close(fig)
 
 
 

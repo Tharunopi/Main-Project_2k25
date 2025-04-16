@@ -13,7 +13,6 @@ class DetectObjectsImpl(DetectObjects):
         wantedClassNames = ClassNames.getWantedClassNames()
         confLevel = ConfidenceLevel.getConfidenceLevel()
 
-        objectDetected = False
         conf = None
         x1, y1, x2, y2 = None, None, None, None
         w, h = None, None
@@ -34,7 +33,6 @@ class DetectObjectsImpl(DetectObjects):
                     cur_arr = np.array([x1, y1, x2, y2, conf])
                     dets = np.vstack((dets, cur_arr))
                     curCls = cls
-                    objectDetected = True
                     lastDetectionTime = time.time()
 
         return conf, curCls, x1, y1, x2, y2, w, h, cx, cy, dets, lastDetectionTime

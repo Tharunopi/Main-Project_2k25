@@ -30,6 +30,7 @@ newEscapes = None
 allAnimal = None
 new_x, new_y = 0, 0
 status = False
+pt = StorePoints()
 
 def getFrameForStreamlit():
     global lastDetectionTime
@@ -40,6 +41,8 @@ def getFrameForStreamlit():
     global new_x
     global new_y
     global status
+    allXpoints = []
+    allYpoints = []
 
     img = cam.getFrame()
 
@@ -64,6 +67,8 @@ def getFrameForStreamlit():
             cvzone.putTextRect(img, f"conf:{conf}, cls:{curCls}", (max(0, x1), max(30, y2 + 40)), offset=2)
             cvzone.putTextRect(img, f"id:{id}, dist:{dist}", (max(0, x1), max(30, y1 - 10)), offset=2)
             cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+            allXpoints.append(pt.getoriginalWidth() - cx)
+            allYpoints.append(pt.getoriginalHeight() - cy)
 
         escapeCount = points.getEscapeCount()
         cvzone.putTextRect(img, f"Cam:1 Object Detected - Escaped: {escapeCount}", (max(0, 10), max(30, 10)), offset=2)
@@ -73,4 +78,4 @@ def getFrameForStreamlit():
         status = espActivity.skipTime(lastDetectionTime=lastDetectionTime)
         cvzone.putTextRect(img, f"Cam:1 No Objects Detected", (max(0, 10), max(30, 10)), offset=2)
 
-    return img, escapeCount, escapedAnimal, newEscapes, allAnimal, new_x, new_y
+    return img, escapeCount, escapedAnimal, newEscapes, allAnimal, new_x, new_y, allXpoints, allYpoints

@@ -9,6 +9,8 @@ class StorePoints:
         self.allYpoints = []
         self.distanceHisory = []
         self.pixelDistanceHistory = []
+        self.allCXpoints = []
+        self.allCYpoints = []
         self.originalWidth = int(originalWidth)
         self.originalHeight = int(originalHeight)
         self.targetWidth = int(targetWidth)
@@ -38,6 +40,12 @@ class StorePoints:
     def getboundaryLine(self):
         return self.boundaryLine
     
+    def getallCXpoints(self):
+        return self.allCXpoints
+    
+    def getallCXpoints(self):
+        return self.allCYpoints
+    
     def getcameraOption(self):
         return self.cameraOption
     
@@ -58,6 +66,12 @@ class StorePoints:
 
     def updatepixelDistanceHistory(self, value):
         self.pixelDistanceHistory.append(value)
+
+    def updateallCXpoints(self, value):
+        self.allCXpoints.append(value)
+
+    def updateallCYpoints(self, value):
+        self.allCYpoints.append(value)
 
     def processAnimal(self, id, className, cx, cy):
         if id not in self.animals:
