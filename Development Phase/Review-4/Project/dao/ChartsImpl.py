@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 from forStreamLit import points
 
 import matplotlib.pyplot as plt
@@ -15,6 +16,9 @@ class ChartsImpl(Charts):
             })
         return chartData
     
+    def getForLineChart(self):
+        return self.lineChart()
+    
     def subPlots(self):
         allXpoints, allYpoints = getXYpoints()
         fig, ax = plt.subplots()
@@ -23,3 +27,5 @@ class ChartsImpl(Charts):
         ax.scatter(allXpoints, allYpoints, color="red", s=100)
         return fig
 
+    def getForSubPlots(self):
+        return self.subPlots()

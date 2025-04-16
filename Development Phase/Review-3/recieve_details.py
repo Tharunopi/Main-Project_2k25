@@ -1,8 +1,7 @@
 import paho.mqtt.client as mqtt
 
 def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
-    client.subscribe("Elephant_cx_cy")
+    client.subscribe("CXCYForLineChartTharun")
 
 def on_message(client, userdata, msg):
     print(f"Received message: {msg.payload.decode()} on topic {msg.topic}")

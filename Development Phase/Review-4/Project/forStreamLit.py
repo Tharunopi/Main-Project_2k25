@@ -6,6 +6,7 @@ sys.path.append(r"C:\Stack overflow\Main-Project_2k25\Development Phase\Review-4
 from dao.DetectObjectsImpl import DetectObjectsImpl
 from dao.TrackObjectsImpl import TrackObjectsImpl
 from dao.EspActivityImpl import EspActivityImpl
+from dao.SendViaMQTTImpl import SendViaMQTTImpl
 
 from entity.Camera import Camera
 from entity.StorePoints import StorePoints
@@ -13,6 +14,7 @@ from entity.StorePoints import StorePoints
 from util.ModelLoading import ModelLoading
 from util.TrackerLoading import TrackerLoading
 
+sender = SendViaMQTTImpl()
 modelLoad = ModelLoading()
 detectObjects = DetectObjectsImpl()
 trackObjects = TrackObjectsImpl()
@@ -74,10 +76,11 @@ def getFrameForStreamlit():
             cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
             allXpoints.append(pt.getoriginalWidth() - cx)
             allYpoints.append(pt.getoriginalHeight() - cy)
+            sender.sendForLineChart()
+            sender.sendForSubplot()
 
         escapeCount = points.getEscapeCount()
         cvzone.putTextRect(img, f"Cam:1 Object Detected - Escaped: {escapeCount}", (max(0, 10), max(30, 10)), offset=2)
-        
     
     else:
         status = espActivity.skipTime(lastDetectionTime=lastDetectionTime)

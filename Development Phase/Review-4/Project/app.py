@@ -71,10 +71,6 @@ while True:
 
     lineChartHolder.line_chart(charts.lineChart(), x_label="Frames", y_label="Distance")
 
-    # fig, ax = plt.subplots()
-    # ax.set_xlim(0, points.getoriginalWidth())
-    # ax.set_ylim(0, points.getoriginalHeight())
-    # ax.scatter(allXpoints, allYpoints, color="red", s=100)
     fig = charts.subPlots()
     subPlotHolder.pyplot(fig=fig)
     plt.close(fig)

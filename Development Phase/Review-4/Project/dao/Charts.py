@@ -6,5 +6,13 @@ class Charts(ABC):
         pass
 
     @abstractmethod
+    def getForLineChart(self):
+        pass
+
+    @abstractmethod
     def subPlots(self):
+        pass
+
+    @abstractmethod
+    def getForSubPlots(self):
         pass
