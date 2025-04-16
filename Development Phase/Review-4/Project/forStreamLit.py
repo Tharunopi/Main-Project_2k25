@@ -32,6 +32,9 @@ new_x, new_y = 0, 0
 status = False
 pt = StorePoints()
 
+def getXYpoints():
+    return allXpoints, allYpoints
+
 def getFrameForStreamlit():
     global lastDetectionTime
     global escapeCount
@@ -41,6 +44,8 @@ def getFrameForStreamlit():
     global new_x
     global new_y
     global status
+    global allXpoints
+    global allYpoints
     allXpoints = []
     allYpoints = []
 
