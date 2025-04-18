@@ -1,5 +1,5 @@
-classnames = ["Elephant"]
-wanted = ["Elephant"]
+classnames = ['bear', 'boar', 'elephant', 'leopard', 'tiger']
+wanted = ['elephant', 'leopard', 'boar', 'tiger']
 
 class ClassNames:
     @staticmethod

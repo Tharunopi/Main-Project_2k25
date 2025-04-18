@@ -2,7 +2,7 @@ import cv2
 
 class Camera:
     def __init__(self, originalWidth:int, originalHeight:int):
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(r"C:\Stack overflow\Main-Project_2k25\YOLO_weights\ALL Animals\ele.mp4")
         self.cap.set(3, originalWidth)
         self.cap.set(4, originalHeight)
 
