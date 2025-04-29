@@ -1,1 +1,1 @@
-File about project
+Read the full documentation about the project (Documentation.pdf)

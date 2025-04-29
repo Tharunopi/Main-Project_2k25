@@ -1,4 +1,4 @@
-classnames = ['bear', 'boar', 'elephant', 'leopard', 'tiger']
+classnames = ['elephant', 'bear', 'boar', 'elephant', 'leopard', 'tiger']
 wanted = ['elephant', 'leopard', 'boar', 'tiger']
 
 class ClassNames:
